@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNITY - 통합 해안감시 체계</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 🌟 선명해진 동적 SVG 전술 배경 🌟 -->
+    <div class="bg-wrapper">
+        <svg class="tactical-svg" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+            <defs>
+                <!-- 전술 그리드 패턴 (크기 축소 및 선명도 조절) -->
+                <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+                    <path d="M 50 0 L 0 0 0 50" fill="none" class="svg-grid" stroke-width="1.5"/>
+                </pattern>
+                <!-- 중심광 효과 -->
+                <radialGradient id="center-glow" cx="50%" cy="50%" r="30%">
+                    <stop offset="0%" class="glow-start"/>
+                    <stop offset="100%" class="glow-end"/>
+                </radialGradient>
+            </defs>
+            
+            <!-- 바탕 중심광 -->
+            <rect width="100%" height="100%" fill="url(#center-glow)"/>
+
+            <!-- 촘촘한 그리드 배경 -->
+            <rect width="100%" height="100%" fill="url(#grid)"/>
+            
+            <!-- 중심 타겟팅 십자선 (Crosshair) -->
+            <line x1="50%" y1="0" x2="50%" y2="100%" class="svg-radar" stroke-width="1.5" stroke-dasharray="6, 6" opacity="0.6"/>
+            <line x1="0" y1="50%" x2="100%" y2="50%" class="svg-radar" stroke-width="1.5" stroke-dasharray="6, 6" opacity="0.6"/>
+
+            <!-- 레이더 원형망 (가장 안쪽 원에 회전 애니메이션 적용) -->
+            <circle cx="50%" cy="50%" r="15vw" class="svg-radar radar-spin" fill="none" stroke-width="2" stroke-dasharray="10, 15"/>
+            <circle cx="50%" cy="50%" r="30vw" class="svg-radar" fill="none" stroke-width="1.5" stroke-dasharray="5, 10"/>
+            <circle cx="50%" cy="50%" r="45vw" class="svg-radar" fill="none" stroke-width="1"/>
+            
+            <!-- 해안선/등고선 추상화 파동 (굵기 확대) -->
+            <path d="M -10%,75% Q 25%,50% 50%,65% T 110%,45%" class="svg-topo" fill="none" stroke-width="3"/>
+            <path d="M -10%,80% Q 25%,55% 50%,70% T 110%,50%" class="svg-topo-sub" fill="none" stroke-width="2" stroke-dasharray="12,6"/>
+            <path d="M -10%,85% Q 25%,60% 50%,75% T 110%,55%" class="svg-topo-sub" fill="none" stroke-width="1" stroke-dasharray="6,12"/>
+
+            <!-- 시스템 좌표계 텍스트 -->
+            <!-- text x="50.5%" y="48.5%" class="svg-text" font-family="monospace" font-size="14" font-weight="bold">SYS.OP.121</text>
+            <text x="50.5%" y="51.5%" class="svg-text" font-family="monospace" font-size="12">LAT 36°01'N / LON 129°22'E</text-->
+        </svg>
+    </div>
+
+    <!-- 고정 상단바 -->
+    <header class="topbar">
+        <div class="header-left">
+            <button id="menu-btn" class="icon-btn" aria-label="메뉴 열기">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+            </button>
+            <div class="logo-box">
+                <span>LOGO</span>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <button id="theme-btn" class="icon-btn" aria-label="테마 변경">
+                <svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- 사이드바 -->
+    <aside id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h2 class="sidebar-title">메뉴</h2>
+            <button id="close-btn" class="icon-btn" aria-label="닫기">
+                <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+        </div>
+
+        <div class="sidebar-menu">
+            <div class="menu-section">
+                <p class="section-title">메인 기능</p>
+                <a href="#" class="menu-item">
+                    <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    EDT 뷰어
+                </a>
+                <a href="#" class="menu-item">
+                    <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line><line x1="2" y1="7" x2="7" y2="7"></line><line x1="2" y1="17" x2="7" y2="17"></line><line x1="17" y1="17" x2="22" y2="17"></line><line x1="17" y1="7" x2="22" y2="7"></line></svg>
+                    영상 복기
+                </a>
+                <a href="#" class="menu-item">
+                    <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    선박 결산
+                </a>
+            </div>
+
+            <div class="menu-section">
+                <p class="section-title">서브 기능</p>
+                <a href="#" class="menu-item">
+                    <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                    상황 보고
+                </a>
+                <a href="#" class="menu-item">
+                    <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+                    고장 조치
+                </a>
+                <a href="#" class="menu-item">
+                    <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+                    마스 (MARS)
+                </a>
+                <a href="#" class="menu-item">
+                    <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                    가이드
+                </a>
+            </div>
+        </div>
+
+        <div class="sidebar-footer">
+            <a href="#" class="menu-item">
+                <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                환경설정
+            </a>
+        </div>
+    </aside>
+
+    <div class="main-content">
+        <main class="dashboard">
+            <!-- 메인 타이틀 및 강조된 서브 타이틀 영역 -->
+            <div class="brand-title-container">
+                <h1 class="main-brand-name">UNITY</h1>
+                <p class="sub-brand-name">121여단 통합 해안감시 체계</p>
+            </div>
+
+            <section class="main-features">
+                <div class="feature-card glass-panel-heavy">
+                    <div class="feature-icon-wrapper">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </div>
+                    <h3>EDT 뷰어</h3>
+                </div>
+                
+                <div class="feature-card glass-panel-heavy">
+                    <div class="feature-icon-wrapper">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line><line x1="2" y1="7" x2="7" y2="7"></line><line x1="2" y1="17" x2="7" y2="17"></line><line x1="17" y1="17" x2="22" y2="17"></line><line x1="17" y1="7" x2="22" y2="7"></line></svg>
+                    </div>
+                    <h3>영상 복기</h3>
+                </div>
+                
+                <div class="feature-card glass-panel-heavy">
+                    <div class="feature-icon-wrapper">
+                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    </div>
+                    <h3>선박 결산</h3>
+                </div>
+            </section>
+
+            <section class="sub-features">
+                <button class="sub-feature-btn glass-panel-light">
+                    <span>상황 보고</span>
+                </button>
+                <button class="sub-feature-btn glass-panel-light">
+                    <span>고장 조치</span>
+                </button>
+                <button class="sub-feature-btn glass-panel-light">
+                    <span>마스 (MARS)</span>
+                </button>
+                <button class="sub-feature-btn glass-panel-light">
+                    <span>가이드</span>
+                </button>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
